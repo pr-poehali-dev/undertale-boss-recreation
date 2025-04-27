@@ -106,8 +106,14 @@
   }
 
   body {
-    @apply bg-black text-white font-pixelated;
+    @apply bg-black text-white font-determination;
     image-rendering: pixelated;
+  }
+}
+
+@layer components {
+  .font-pixelated {
+    font-family: 'PressStart2P', cursive;
   }
 }
 
