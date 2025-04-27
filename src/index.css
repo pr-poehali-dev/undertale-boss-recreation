@@ -106,7 +106,8 @@
   }
 
   body {
-    @apply bg-black text-white font-determination;
+    @apply bg-black text-white;
+    font-family: 'Determination', monospace;
     image-rendering: pixelated;
   }
 }
