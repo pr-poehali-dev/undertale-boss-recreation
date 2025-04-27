@@ -14,35 +14,48 @@ const TypingText: React.FC<TypingTextProps> = ({
   const [displayedText, setDisplayedText] = useState('');
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isComplete, setIsComplete] = useState(false);
-
+  
   useEffect(() => {
     // Reset when text changes
     setDisplayedText('');
     setCurrentIndex(0);
     setIsComplete(false);
   }, [text]);
-
+  
   useEffect(() => {
     if (currentIndex < text.length) {
-      const timer = setTimeout(() => {
-        // Play sound
-        const audio = new Audio('/sounds/undertale-text.wav');
-        audio.volume = 0.2;
-        audio.play().catch(err => console.log('Audio play error:', err));
-        
+      const typingTimer = setTimeout(() => {
+        // Add next character
         setDisplayedText(prev => prev + text[currentIndex]);
-        setCurrentIndex(prevIndex => prevIndex + 1);
+        setCurrentIndex(prev => prev + 1);
+        
+        // Play typing sound (except for spaces)
+        if (text[currentIndex] !== ' ') {
+          const audio = new Audio('/sounds/typing.mp3');
+          audio.volume = 0.2;
+          audio.play().catch(e => console.log("Error playing sound:", e));
+        }
       }, speed);
       
-      return () => clearTimeout(timer);
+      return () => clearTimeout(typingTimer);
     } else if (!isComplete) {
       setIsComplete(true);
-      if (onComplete) onComplete();
+      if (onComplete) {
+        onComplete();
+      }
     }
   }, [currentIndex, text, speed, isComplete, onComplete]);
-
+  
+  // For instant display on click
+  const completeTyping = () => {
+    if (!isComplete) {
+      setDisplayedText(text);
+      setCurrentIndex(text.length);
+    }
+  };
+  
   return (
-    <div className="font-pixelated text-white">
+    <div onClick={completeTyping}>
       {displayedText}
     </div>
   );
